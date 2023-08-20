@@ -1,9 +1,8 @@
-# searchable_dropdown
+# flutter_searchable_dropdown
 
 Widget to let the user search through a keyword string typed on a customizable keyboard in a single or multiple choices list presented as a dropdown in a dialog box or a menu.
 
 ## Platforms
-
 This widget has been successfully tested on iOS, Android and Chrome.
 
 ## Examples
@@ -716,6 +715,7 @@ In your pull request, feel free to add your line in the contributors section bel
 ### Contributors
 * https://github.com/icemanbsi
 * https://github.com/lcuis
+* https://github.com/chandrabezzo
 
 ## CI/CD
 
