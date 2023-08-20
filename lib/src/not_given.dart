@@ -1,0 +1,3 @@
+class NotGiven {
+  const NotGiven();
+}
