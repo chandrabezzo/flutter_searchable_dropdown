@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_searchable_dropdown/flutter_searcahble_dropdown.dart';
+import 'package:flutter_searchable_dropdown/flutter_searchable_dropdown.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 class ExampleNumber {

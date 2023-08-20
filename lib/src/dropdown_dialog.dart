@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'pointer_this_please.dart';
-import 'prepare_widget.dart';
+import 'widget_util.dart';
 
 class DropdownDialog<T> extends StatefulWidget {
   final List<DropdownMenuItem<T>> items;
@@ -138,32 +138,31 @@ class DropdownDialogState<T> extends State<DropdownDialog> {
   }
 
   Widget titleBar() {
-    String validatorOutput;
+    String? validatorOutput;
     validatorOutput = widget.validator?.call(selectedResult);
 
     Widget validatorOutputWidget = valid
         ? const SizedBox.shrink()
         : Text(
-            validatorOutput,
+            validatorOutput ?? '',
             style: const TextStyle(color: Colors.red, fontSize: 13),
           );
 
     Widget doneButtonWidget =
         (widget.multipleSelection == true) || widget.doneButton != null
-            ? PrepareWidget(
-                object: widget.doneButton,
+            ? WidgetUtil.prepareWidget(widget.doneButton,
                 parameter: selectedResult,
-                stringToWidgetFunction: (string) {
-                  return (TextButton.icon(
-                      onPressed: !valid
-                          ? null
-                          : () {
-                              pop();
-                              setState(() {});
-                            },
-                      icon: const Icon(Icons.close),
-                      label: Text(string)));
-                })
+                context: context, stringToWidgetFunction: (string) {
+                return (TextButton.icon(
+                    onPressed: !valid
+                        ? null
+                        : () {
+                            pop();
+                            setState(() {});
+                          },
+                    icon: const Icon(Icons.close),
+                    label: Text(string)));
+              })
             : const SizedBox.shrink();
     return widget.hint != null
         ? Container(
@@ -171,7 +170,7 @@ class DropdownDialogState<T> extends State<DropdownDialog> {
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  PrepareWidget(object: widget.hint),
+                  WidgetUtil.prepareWidget(widget.hint),
                   Column(
                     children: <Widget>[doneButtonWidget, validatorOutputWidget],
                   ),
@@ -306,29 +305,27 @@ class DropdownDialogState<T> extends State<DropdownDialog> {
   }
 
   Widget closeButtonWrapper() {
-    return (PrepareWidget(
-        object: widget.closeButton,
-        parameter: selectedResult,
-        stringToWidgetFunction: (string) {
-          return (Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              TextButton(
-                onPressed: () {
-                  pop();
-                },
-                child: Container(
-                    constraints: BoxConstraints(
-                        maxWidth: MediaQuery.of(context).size.width / 2),
-                    child: Text(
-                      string,
-                      style: defaultButtonStyle,
-                      overflow: TextOverflow.ellipsis,
-                    )),
-              )
-            ],
-          ));
-        }));
+    return WidgetUtil.prepareWidget(widget.closeButton,
+        parameter: selectedResult, stringToWidgetFunction: (string) {
+      return Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          TextButton(
+            onPressed: () {
+              pop();
+            },
+            child: Container(
+                constraints: BoxConstraints(
+                    maxWidth: MediaQuery.of(context).size.width / 2),
+                child: Text(
+                  string,
+                  style: defaultButtonStyle,
+                  overflow: TextOverflow.ellipsis,
+                )),
+          )
+        ],
+      );
+    });
   }
 }

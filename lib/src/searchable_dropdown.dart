@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_searchable_dropdown/src/prepare_widget.dart';
+import 'package:flutter_searchable_dropdown/src/widget_util.dart';
 
 import 'const.dart';
 import 'dropdown_dialog.dart';
@@ -202,7 +202,7 @@ class SearchableDropdown<T> extends StatefulWidget {
     bool readOnly = false,
     Color? menuBackgroundColor,
   }) {
-    return (SearchableDropdown._(
+    return SearchableDropdown._(
       key: key,
       items: items,
       style: style,
@@ -234,7 +234,7 @@ class SearchableDropdown<T> extends StatefulWidget {
       menuConstraints: menuConstraints,
       readOnly: readOnly,
       menuBackgroundColor: menuBackgroundColor,
-    ));
+    );
   }
 
   const SearchableDropdown._({
@@ -417,9 +417,9 @@ class SearchableDropdownState<T> extends State<SearchableDropdown<T>> {
   }
 
   Widget get menuWidget {
-    return (DropdownDialog(
+    return DropdownDialog(
       items: widget.items,
-      hint: PrepareWidget(object: widget.searchHint),
+      hint: WidgetUtil.prepareWidget(widget.searchHint),
       isCaseSensitiveSearch: widget.isCaseSensitiveSearch,
       closeButton: widget.closeButton,
       keyboardType: widget.keyboardType,
@@ -443,7 +443,7 @@ class SearchableDropdownState<T> extends State<SearchableDropdown<T>> {
         }
         setState(() {});
       },
-    ));
+    );
   }
 
   @override
@@ -453,9 +453,9 @@ class SearchableDropdownState<T> extends State<SearchableDropdown<T>> {
     int? hintIndex;
     if (widget.hint != null || (!_enabled)) {
       final Widget emplacedHint = _enabled
-          ? PrepareWidget(object: widget.hint)
+          ? WidgetUtil.prepareWidget(widget.hint)
           : DropdownMenuItem<Widget>(
-              child: PrepareWidget(object: widget.disabledHint));
+              child: WidgetUtil.prepareWidget(widget.disabledHint));
       hintIndex = items.length;
       items.add(DefaultTextStyle(
         style: _textStyle.copyWith(color: Theme.of(context).hintColor),
@@ -513,8 +513,8 @@ class SearchableDropdownState<T> extends State<SearchableDropdown<T>> {
                 color: _iconColor,
                 size: widget.iconSize,
               ),
-              child:
-                  PrepareWidget(object: widget.icon, parameter: selectedResult),
+              child: WidgetUtil.prepareWidget(widget.icon,
+                  parameter: selectedResult),
             ),
           ],
         ));
@@ -562,17 +562,15 @@ class SearchableDropdownState<T> extends State<SearchableDropdown<T>> {
     );
 
     const double bottom = 8.0;
-    String? validatorOutput;
+    String validatorOutput = '';
     if (widget.validator != null) {
       validatorOutput = widget.validator?.call(selectedResult);
     }
-    var labelOutput = PrepareWidget(
-        object: widget.label,
-        parameter: selectedResult,
-        stringToWidgetFunction: (string) {
-          return (Text(string,
-              style: const TextStyle(color: Colors.blueAccent, fontSize: 13)));
-        });
+    var labelOutput = WidgetUtil.prepareWidget(widget.label,
+        parameter: selectedResult, stringToWidgetFunction: (string) {
+      return Text(string,
+          style: const TextStyle(color: Colors.blueAccent, fontSize: 13));
+    });
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -589,19 +587,17 @@ class SearchableDropdownState<T> extends State<SearchableDropdown<T>> {
                     left: 0.0,
                     right: 0.0,
                     bottom: bottom,
-                    child: PrepareWidget(
-                        object: widget.underline, parameter: selectedResult),
+                    child: WidgetUtil.prepareWidget(widget.underline,
+                        parameter: selectedResult),
                   ),
           ],
         ),
         valid
             ? const SizedBox.shrink()
-            : validatorOutput is String
-                ? Text(
-                    validatorOutput,
-                    style: const TextStyle(color: Colors.red, fontSize: 13),
-                  )
-                : const SizedBox.shrink(),
+            : Text(
+                validatorOutput,
+                style: const TextStyle(color: Colors.red, fontSize: 13),
+              ),
         displayMenu.value ? menuWidget : const SizedBox.shrink(),
       ],
     );
